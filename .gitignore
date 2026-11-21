@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Local Netlify folder
+.netlify
+
+# Environment variables (contain real secrets - never commit)
+.env.local
+.env*.local

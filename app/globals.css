@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --motion-press: 100ms;
+    --motion-feedback: 150ms;
+    --motion-state: 225ms;
+    --motion-enter: 500ms;
+    --motion-exit: 375ms;
+    --motion-stagger: 60ms;
+    --motion-hero-stagger: 70ms;
+    --motion-spinner: 600ms;
+    --motion-notice-hold: 4s;
+    --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-exit: ease-in;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-base font-normal leading-relaxed text-ink antialiased;
+  }
+
+  h1 {
+    @apply text-4xl font-extrabold leading-tight tracking-[-0.035em] sm:text-5xl;
+  }
+
+  h2 {
+    @apply text-xl font-bold leading-tight tracking-tight sm:text-2xl;
+  }
+
+  h3 {
+    @apply leading-snug tracking-tight;
+  }
+
+  label {
+    @apply grid gap-2 text-sm font-semibold leading-relaxed;
+  }
+
+  input, select, textarea {
+    @apply min-h-11 w-full min-w-0 rounded-md border border-line bg-white px-3 py-2 text-base font-normal leading-relaxed text-ink;
+  }
+
+  input::placeholder, textarea::placeholder {
+    @apply text-muted;
+  }
+
+  input[type='file']::file-selector-button {
+    @apply mr-3 cursor-pointer rounded border border-line bg-surface px-3 py-1 text-sm font-medium text-ink;
+  }
+
+  :focus-visible,
+  :is(input, select, textarea):focus {
+    @apply outline outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-lg border border-line bg-white p-5 shadow-panel sm:p-7;
+  }
+
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-semibold leading-snug text-white disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .secondary {
+    @apply border-line bg-white text-ink;
+  }
+
+  .muted {
+    @apply text-muted;
+  }
+
+  .tag {
+    @apply inline-block rounded border border-line bg-surface px-2 py-0.5 text-xs font-medium text-ink;
+  }
+}
+
+@layer components {
+  .btn {
+    position: relative;
+    isolation: isolate;
+    transition: transform var(--motion-feedback) var(--ease-quart);
+  }
+
+  .btn::before,
+  .motion-card::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-feedback) var(--ease-quart);
+  }
+
+  .btn::before {
+    @apply bg-accent-hover;
+  }
+
+  .btn.secondary::before {
+    @apply bg-surface;
+  }
+
+  .btn:not(:disabled):active {
+    transform: scale(0.97);
+    transition-duration: var(--motion-press);
+    transition-timing-function: var(--ease-exit);
+  }
+
+  .motion-card {
+    position: relative;
+    isolation: isolate;
+    transition: transform var(--motion-state) var(--ease-quart);
+  }
+
+  .motion-card::after {
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.07);
+    transition-duration: var(--motion-state);
+  }
+
+  @media (hover: hover) {
+    .btn:not(:disabled):hover::before,
+    .motion-card:hover::after {
+      opacity: 1;
+    }
+
+    .btn:not(:disabled):hover:not(:active) {
+      transform: translateY(-1px);
+    }
+
+    .motion-card:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  label:has(> :is(input, select, textarea)) > :is(input, select, textarea),
+  label:has(> :is(input, select, textarea))::after {
+    grid-area: 2 / 1;
+  }
+
+  label:has(> :is(input, select, textarea))::after {
+    @apply rounded-md border border-accent;
+    z-index: 1;
+    content: '';
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-feedback) var(--ease-quart);
+  }
+
+  label:has(> :is(input, select, textarea):focus)::after {
+    opacity: 1;
+  }
+
+  .motion-hero,
+  .motion-list > li {
+    animation: motion-rise var(--motion-enter) var(--ease-quart) var(--motion-delay, 0ms) both;
+  }
+
+  .motion-hero-title {
+    animation-timing-function: var(--ease-expo);
+  }
+
+  .motion-hero-subtitle {
+    --motion-delay: var(--motion-hero-stagger);
+  }
+
+  .motion-hero-search {
+    --motion-delay: calc(2 * var(--motion-hero-stagger));
+  }
+
+  .motion-list > :nth-child(2) { --motion-delay: var(--motion-stagger); }
+  .motion-list > :nth-child(3) { --motion-delay: calc(2 * var(--motion-stagger)); }
+  .motion-list > :nth-child(4) { --motion-delay: calc(3 * var(--motion-stagger)); }
+  .motion-list > :nth-child(5) { --motion-delay: calc(4 * var(--motion-stagger)); }
+  .motion-list > :nth-child(n + 6) { --motion-delay: calc(5 * var(--motion-stagger)); }
+
+  .motion-feedback {
+    animation: motion-fade var(--motion-state) var(--ease-quart) both;
+  }
+
+  .motion-notice {
+    animation: motion-fade var(--motion-enter) var(--ease-quart) both,
+      motion-fade-out var(--motion-exit) var(--ease-exit) var(--motion-notice-hold) forwards;
+  }
+
+  .btn[aria-busy='true'] .motion-button-label {
+    opacity: 0;
+  }
+
+  .motion-spinner {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+
+  .motion-spinner::after {
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    content: '';
+    animation: motion-spin var(--motion-spinner) linear infinite;
+  }
+}
+
+@keyframes motion-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes motion-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes motion-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes motion-spin {
+  to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-hero, .motion-list > li, .motion-feedback {
+    animation: none;
+  }
+
+  .motion-notice {
+    animation: motion-fade-out 0ms linear var(--motion-notice-hold) forwards;
+  }
+
+  .btn, .btn::before, .motion-card, .motion-card::after,
+  label:has(> :is(input, select, textarea))::after {
+    transition: none;
+  }
+
+  .btn:not(:disabled):active,
+  .btn:not(:disabled):hover:not(:active),
+  .motion-card:hover {
+    transform: none;
+  }
+}
+
+@layer components {
+  .catalog-row::after {
+    @apply bg-surface;
+    box-shadow: none;
+  }
+
+  .catalog-row:focus-visible::after {
+    opacity: 1;
+  }
+}
