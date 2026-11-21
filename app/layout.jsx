@@ -17,6 +17,7 @@ export default function Layout({ children }) {
               <Link className="inline-flex min-h-11 items-center py-2 hover:text-ink" href="/">首页</Link>
               <Link className="inline-flex min-h-11 items-center py-2 hover:text-ink" href="/courses">课程</Link>
               <Link className="inline-flex min-h-11 items-center py-2 hover:text-ink" href="/upload">上传资料</Link>
+              <Link className="inline-flex min-h-11 items-center py-2 hover:text-ink" href="https://ai-code-pool.netlify.app" target="_blank" rel="noopener noreferrer">AI 码池</Link>
             </nav>
           </div>
         </header>
